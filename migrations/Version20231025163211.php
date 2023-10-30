@@ -17,8 +17,8 @@ final class Version20231025163211 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('ips');
-        $table->addColumn('ip', 'integer', ['unsigned' => true]);
-        $table->setPrimaryKey(["ip"]);
+        $table->addColumn('ipp', 'integer', ['unsigned' => true]);
+        $table->setPrimaryKey(["ipp"]);
         $table->addColumn('cnt', 'integer', ['notnull' => true]);
     }
 
