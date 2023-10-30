@@ -11,12 +11,12 @@ final class Version20231030081309 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Promocodes storage';
+        return 'Promos storage';
     }
 
     public function up(Schema $schema): void
     {
-        $table = $schema->createTable('promocodes');
+        $table = $schema->createTable('promos');
         $table->addColumn('id', 'integer', ['autoincrement' => true, 'unsigned' => true]);
         $table->setPrimaryKey(["id"]);
         $table->addColumn('code', 'string', ['length' => 10]);
@@ -24,6 +24,6 @@ final class Version20231030081309 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $schema->dropTable('promocodes');
+        $schema->dropTable('promos');
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'generate-promos')]
 class GeneratePromosCommand extends Command
 {
-    protected string $promocodesAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    protected string $promocodesAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
