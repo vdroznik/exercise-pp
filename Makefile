@@ -16,6 +16,10 @@ migrate-db:
 	docker compose exec app vendor/bin/doctrine-migrations migrate -n
 	docker compose exec app vendor/bin/doctrine-migrations --db-configuration=migrations-db-test.php migrate -n
 
+generate-import-promos:
+	docker compose exec app bin/promo generate-promos | true
+	docker compose exec db mysql -u root -D promo -e "LOAD DATA INFILE '/var/lib/mysql-files/exchange/promocodes.csv' INTO TABLE promocodes (@promo) SET code=@promo"
+
 test:
 	docker compose exec app vendor/bin/phpunit --testdox
 

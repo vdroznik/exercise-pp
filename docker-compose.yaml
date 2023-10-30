@@ -14,7 +14,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       PHP_IDE_CONFIG: serverName=localhost
     volumes:
-      - '.:/var/www/html'
+      - .:/var/www/html
       - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     depends_on:
       - db
@@ -32,6 +32,7 @@ services:
       MYSQL_DATABASE_TEST: '${MYSQL_DATABASE}_test'
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
       - ./docker/mysql/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
