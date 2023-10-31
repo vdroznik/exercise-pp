@@ -4,6 +4,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Nyholm\Psr7\Request as NyholmPsr7Request;
 use Nyholm\Psr7\Response as NyholmPsr7Response;
+use Odan\Session\PhpSession;
+use Odan\Session\SessionInterface;
+use Odan\Session\SessionManagerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,16 +21,20 @@ return [
         );
     },
 
-//    SessionInterface::class => function (ContainerInterface $container) {
-//        $options = [
-//            'name' => 'exercise-promo',
-//            'secure' => true,
-//            'httponly' => true,
-//            'cache_limiter' => 'nocache',
-//        ];
-//
-//        return new PhpSession($options);
-//    },
+    SessionManagerInterface::class => function (ContainerInterface $container) {
+        return $container->get(SessionInterface::class);
+    },
+    SessionInterface::class => function (ContainerInterface $container) {
+        $options = [
+            'name' => 'exercise-promo',
+            'lifetime' => 31_536_000, // 1 year in seconds
+            'secure' => true,
+            'httponly' => true,
+            'cache_limiter' => 'nocache',
+        ];
+
+        return new PhpSession($options);
+    },
 
     RandomEngine::class => DI\get(RandomEngineSecure::class),
 

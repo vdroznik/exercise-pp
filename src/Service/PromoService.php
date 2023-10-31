@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ExercisePromo\Service;
 
 use Doctrine\DBAL\Connection;
+use ExercisePromo\Entity\Promo;
 use ExercisePromo\Repository\IpRepository;
 use ExercisePromo\Repository\PromoRepository;
 
@@ -21,7 +22,7 @@ class PromoService
         return $this->repo->getIssuedPromoCode($promoId);
     }
 
-    public function issuePromoCode(string $ip): ?string
+    public function issuePromo(string $ip): ?Promo
     {
         $this->dbal->beginTransaction();
 
@@ -39,6 +40,6 @@ class PromoService
 
         $this->dbal->commit();
 
-        return $promo->code;
+        return $promo;
     }
 }

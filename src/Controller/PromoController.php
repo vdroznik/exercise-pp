@@ -6,6 +6,7 @@ namespace ExercisePromo\Controller;
 
 use ExercisePromo\Service\IpLimiter;
 use ExercisePromo\Service\PromoService;
+use Odan\Session\SessionManagerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -14,15 +15,22 @@ class PromoController
     public function __construct(
         private IpLimiter $ipLimiter,
         private PromoService $promoService,
+        private SessionManagerInterface $session,
     ) {}
 
 
     public function getPromo(Request $request, Response $response): Response
     {
-        $promoId = 0; // from session
-        $promoCode = $this->promoService->getIssuedPromoCode($promoId);
-        if ($promoCode) {
-            return $this->promoRedirectResponse($promoCode, $response);
+        if (!$this->session->isStarted()) {
+            $this->session->start();
+        }
+
+        $promoId = $this->session->get('promoId');
+        if ($promoId) {
+            $promoCode = $this->promoService->getIssuedPromoCode($promoId);
+            if ($promoCode) {
+                return $this->promoRedirectResponse($promoCode, $response);
+            }
         }
 
         $ip = $request->getServerParams()['REMOTE_ADDR'];
@@ -32,14 +40,17 @@ class PromoController
             return $response;
         }
 
-        $promoCode = $this->promoService->issuePromoCode($ip);
-        if ($promoCode) {
-            return $this->promoRedirectResponse($promoCode, $response);
+        $promo = $this->promoService->issuePromo($ip);
+        if (!$promo) {
+            $response->getBody()->write('Bad luck. We have ran out of promo codes.');
+
+            return $response;
         }
 
-        $response->getBody()->write('Bad luck. We have ran out of promo codes.');
+        $this->session->set('promoId', $promo->id);
+        $this->session->save();
 
-        return $response;
+        return $this->promoRedirectResponse($promo->code, $response);
     }
 
     private function promoRedirectResponse(string $promoCode, Response $response): Response

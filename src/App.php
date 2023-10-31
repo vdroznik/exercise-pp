@@ -16,8 +16,12 @@ class App
         protected Container $container
     ) {}
 
-    public function handle(Request $request, Response $response): Response
+    public function handle(Request $request, Response $response = null): Response
     {
+        if (!$response) {
+            $response = $this->container->get(Response::class);
+        }
+
         $uri = $request->getRequestTarget();
 
         if ($uri === '/getpromo') {
