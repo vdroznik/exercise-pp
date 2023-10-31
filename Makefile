@@ -1,4 +1,5 @@
 init:
+	cp .env.example .env | true
 	docker compose up -d
 	docker compose exec app composer install
 
@@ -18,7 +19,7 @@ migrate-db:
 
 generate-import-promos:
 	docker compose exec app bin/promo generate-promos | true
-	docker compose exec db mysql -u root -D promo -e "LOAD DATA INFILE '/var/lib/mysql-files/exchange/promocodes.csv' INTO TABLE promos (@promo) SET code=@promo"
+	docker compose exec db bash -c 'export MYSQL_PWD=$$MYSQL_ROOT_PASSWORD && mysql -u root -D promo -e "LOAD DATA INFILE \"/var/lib/mysql-files/exchange/promocodes.csv\" INTO TABLE promos (@promo) SET code=@promo"'
 
 test:
 	docker compose exec app vendor/bin/phpunit --testdox
@@ -33,3 +34,6 @@ remove:
 	docker compose down
 	docker volume remove exercise-promo_db-data || true
 	docker image remove exercise-promo-app || true
+	rm ./exchange/promocodes.csv | true
+	rm ./logs/*.log | true
+

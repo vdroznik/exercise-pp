@@ -32,7 +32,6 @@ services:
       MYSQL_DATABASE_TEST: '${MYSQL_DATABASE}_test'
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
-      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
       - ./docker/mysql/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
